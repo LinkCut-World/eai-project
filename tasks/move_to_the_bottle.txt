@@ -1,0 +1,1 @@
+You can see a robot arm on the vehicle, walk to the blue bottle and stop until you explicitly see the blue bottle being touched by the robot arm. Make sure the blue bottle visible during the entire process, and try to keep it at the center of the front camera's view. **Do not stop if you cannot ensure a contact between the robot arm and the blue bottle.**

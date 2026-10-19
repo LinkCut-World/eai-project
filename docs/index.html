@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f7f7f2">
+    <meta name="description" content="Lerunbot enables a standard 6-DoF robotic arm to walk on an unpowered base. Watch the demos and read our project report.">
+    <title>Lerunbot: Lerobot Runs</title>
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="styles.css">
+    <script type="module" src="report-viewer.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#demos">Skip to demos</a>
+    <header class="site-header">
+      <a class="wordmark" href="./" aria-label="Lerunbot home"><span class="brand-mark" aria-hidden="true">L</span>Lerunbot</a>
+      <nav aria-label="Main navigation">
+        <a href="#demos">Demos</a>
+        <a href="#report">Report</a>
+        <a href="https://github.com/LinkCut-World/eai-project">GitHub <span aria-hidden="true">↗</span></a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="intro" aria-labelledby="project-title">
+        <p class="eyebrow">Embodied AI · Tsinghua University</p>
+        <h1 id="project-title">Lerunbot<span class="title-divider">:</span> <span class="subtitle">Lerobot Runs</span></h1>
+        <p class="description">Teaching a robotic arm to walk.</p>
+        <p class="project-summary">A standard 6-DoF arm propels itself on an unpowered base by pushing against the ground.</p>
+        <ul class="authors" aria-label="Authors">
+          <li>Zeyang Zhang</li>
+          <li>Chengwei Liang</li>
+          <li>Yiqi Dong</li>
+        </ul>
+        <div class="project-links">
+          <a class="button primary" href="assets/report.pdf" target="_blank" rel="noopener">Read the report <span aria-hidden="true">↗</span></a>
+          <a class="button" href="https://github.com/LinkCut-World/eai-project">View source code <span aria-hidden="true">↗</span></a>
+        </div>
+      </section>
+
+      <section id="demos" class="demos" aria-labelledby="demos-title">
+        <div class="section-heading">
+          <h2 id="demos-title"><span class="section-number" aria-hidden="true">01</span> In motion</h2>
+          <p>Real-world demonstrations</p>
+        </div>
+        <div class="video-grid">
+          <figure class="demo">
+            <video controls playsinline preload="metadata" poster="assets/demo-1-poster.jpg" aria-label="Demo 1: Lerunbot on an outdoor running track">
+              <source src="assets/demo-1.mp4" type="video/mp4">
+              Your browser cannot play this video. <a href="assets/demo-1.mp4">Open Demo 1</a>.
+            </video>
+            <figcaption><span class="demo-label">Demo 1</span><span>Outdoor locomotion</span><a href="assets/demo-1.mp4" target="_blank" rel="noopener" aria-label="Open Demo 1 in a new tab">↗</a></figcaption>
+          </figure>
+          <figure class="demo">
+            <video controls playsinline preload="metadata" poster="assets/demo-2-poster.jpg" aria-label="Demo 2: Lerunbot navigating around obstacles indoors">
+              <source src="assets/demo-2.mp4" type="video/mp4">
+              Your browser cannot play this video. <a href="assets/demo-2.mp4">Open Demo 2</a>.
+            </video>
+            <figcaption><span class="demo-label">Demo 2</span><span>Indoor navigation</span><a href="assets/demo-2.mp4" target="_blank" rel="noopener" aria-label="Open Demo 2 in a new tab">↗</a></figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section id="report" class="report" aria-labelledby="report-title">
+        <div class="section-heading report-heading">
+          <div>
+            <h2 id="report-title"><span class="section-number" aria-hidden="true">02</span> Project report</h2>
+            <p>Hardware, control framework, reinforcement learning, and experiments.</p>
+          </div>
+          <div class="report-links">
+            <a href="assets/report.pdf" target="_blank" rel="noopener">Open PDF <span aria-hidden="true">↗</span></a>
+            <a href="assets/report.pdf" download="Lerunbot-Project-Report.pdf">Download <span aria-hidden="true">↓</span></a>
+          </div>
+        </div>
+        <div class="report-viewer" aria-label="Project report reader">
+          <div class="reader-toolbar" aria-label="Report controls">
+            <div class="reader-pagination">
+              <button id="previous-page" type="button" aria-label="Previous report page" disabled>←</button>
+              <span id="page-label" aria-live="polite">Loading report…</span>
+              <button id="next-page" type="button" aria-label="Next report page" disabled>→</button>
+            </div>
+            <div class="reader-zoom">
+              <button id="zoom-out" type="button" aria-label="Zoom out" disabled>−</button>
+              <span id="zoom-label">100%</span>
+              <button id="zoom-in" type="button" aria-label="Zoom in" disabled>+</button>
+            </div>
+          </div>
+          <div id="report-stage" class="report-stage" tabindex="0" aria-label="Report page">
+            <p id="report-status" role="status">Loading the project report…</p>
+            <noscript><p><a href="assets/report.pdf">Open the project report (PDF)</a>.</p></noscript>
+          </div>
+          <div id="report-text" class="sr-only"></div>
+        </div>
+        <p class="pdf-help">Having trouble viewing the report? <a href="assets/report.pdf" target="_blank" rel="noopener">Open the PDF directly</a>.</p>
+      </section>
+    </main>
+
+    <footer class="site-footer"><span>Lerunbot · EAI Project</span><a href="https://github.com/LinkCut-World/eai-project">Source on GitHub <span aria-hidden="true">↗</span></a></footer>
+  </body>
+</html>

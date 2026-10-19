@@ -1,0 +1,146 @@
+time_str: ${now:%Y%m%d_%H%M%S}
+
+hydra:
+  run:
+    dir: ./temp/${experiment.experiment_name}/${experiment.trial_name} # all relative paths are relative to this directory
+
+experiment:
+  experiment_name: real-world
+  trial_name: real-world
+  group_name: real-world
+  checkpoint_root: checkpoint # file root to save checkpoints. Relative to hydra.run.dir or absolute path
+  seed: 42 # global random seed
+  train_device: cpu # device for training
+  rollout_device: cpu # device for data collection
+  sync: true # whether to use synchronous data collection
+  realworld: true # whether this is a real-world experiment, in which we may do some special handling. TODO: remove this flag in the future.
+
+env:
+  type: gym
+  gamma: 1 # discount factor
+  gym:
+    name: Lerunbot-v0 # environment name, e.g., HalfCheetah-v4
+    Lerunbot-v0:
+      max_steps: 1
+      args:
+        control_decimation: 20
+        control_frequency: 50
+        controller_addr: tcp://<your_robot_ip>:7101
+        controller_version: 0.0.1
+        position_server_addr: tcp://<your_robot_ip>:7201
+        observation_mode: yaw
+        pause_before_step: true
+        skip_steps: 10
+        action_repeat: 10
+        translation_weight: 1
+        rotation_weight: 0.5
+        action_penalty_weight: 0.01
+        tracking_penalty_weight: 0.02
+        target_r_range:
+        - 0
+        - 0.2
+        target_t_range:
+        - -10
+        - 10
+        target_yaw_range:
+        - -0.174
+        - 0.174
+        relative_yaw: true
+        key_qpos:
+        - 0
+        - 1
+        - 2
+        - 3
+    args: # args passed to GymWrapper
+      device: ${experiment.rollout_device}
+    max_steps: ${.${.name}.max_steps}
+  parallel_env_args: # args passed to ParallelEnv
+    num_workers: 1
+  max_steps: ${.${.type}.max_steps}
+
+replay_buffer:
+  prioritized: false
+  storage_args:
+    max_size: 2048 # maximum size of LazyTensorStorage. = collector.args.frames_per_batch
+    device: ${experiment.train_device}
+  args: # args passed to ReplayBuffer
+    batch_size: 16
+
+collector:
+  collect_freq: 160 # frequency (in training steps) to collect data. = ppo_epochs * (collector.args.frames_per_batch // replay_buffer.args.batch_size)
+  init_random_frames: 0 # number of initial random frames
+  args: # args passed to aSyncDataCollector
+    frames_per_batch: 10
+    total_frames: -1
+    device: ${experiment.rollout_device}
+    no_cuda_sync: True # if True, explicit CUDA synchronizations calls will be bypassed.
+
+agent:
+  type: ppo
+  load_path: <your_bc_checkpoint_path> # path to load pretrained agent. Imcompatible with resume training. Relative to hydra.run.dir or absolute path
+  load_optimizer: false
+
+  ppo:
+    network:
+      hidden_sizes:
+      - 256
+      - 256
+      activation: ReLU
+      default_policy_scale: 1.0
+      scale_lb: 0.05
+
+    gae_args: # args passed to GAE module
+      lmbda: 0.95
+
+    loss_args: # args passed to ClipPPOLoss module
+      clip_epsilon: 0.2
+      loss_critic_type: l2
+      entropy_coef: 0.0
+      critic_coef: 0.25
+      normalize_advantage: True
+
+    optimizer:
+      type: Adam
+      Adam:
+        args:
+          lr: 1e-5
+          weight_decay: 0.0
+          eps: 1e-5
+
+    lr_scheduler:
+      type: disabled
+
+training:
+  num_steps: 28800 # total training steps. = ppo_epochs * (collector.total_frames // replay_buffer.args.batch_size)
+  off_policy_tolerance: null # number of versions of policy to tolerate the off-policyness. If null, no tolerance is applied. If 0, not supported.
+
+  logging:
+    freq: 160 # logging frequency (in training steps), expected to be small. = collector.collect_freq
+    path: train.log # relative to hydra.run.dir, or absolute path
+    count: rollout_frames # logging step counting method: rollout_frames | training_steps
+
+    type: wandb # disabled | wandb
+    wandb:
+      args:
+        mode: online # online | offline
+        entity: eai-project
+        project: ${experiment.experiment_name}
+        name: ${experiment.trial_name}
+        group: ${experiment.group_name}
+
+  evaluation:
+    frames: 5 # total evaluation frames per evaluation. Normally, a multiple of env.max_steps * env.parallel_env_args.num_workers
+    freq: 1440 # evaluation frequency (in training steps)
+
+  save:
+    freq: 160
+
+resume:
+  mode: disabled # disabled | specified.
+  specified_path: null # path to checkpoint if mode is specified. Relative to hydra.run.dir or absolute path
+  overrides: {} # dict of config entries to override when resuming. See override() in train.py for format.
+
+compile:
+  compile: False
+  compile_mode: default
+  cudagraphs: False

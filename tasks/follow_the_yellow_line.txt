@@ -1,0 +1,1 @@
+Walk along the yellow line on the ground. Make sure to keep the yellow line visible in the center of the front camera's view during the entire process and align the vehicle to follow the yellow line. Do not stop until you reach the end of the yellow line.
